@@ -1,0 +1,144 @@
+﻿@model IEnumerable<WebStoreManager.Models.BlogViewModel.BlogPostViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div id="blog-intro">
+    <div id="blog-intro-overlay"></div>
+    <div id="blog-intro-content">
+        <h1 class="h1-responsive">It's Everyday Bro!</h1>
+        <h5 class="h5-responsive">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</h5>
+    </div>
+</div>
+
+<div id="blog-search">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h5>Great way to find blogs that you want is to search for them!</h5>
+            </div>
+            <div class="col-md-4 offset-1">
+                <div class="md-form">
+                    <input type="text" name="blog-search" value="" class="form-control" placeholder="Search" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    @{
+        if (ViewBag.Message == "Successfully created!")
+        {
+            <div class="deleteMessage light-green lighten-2 text-white p-3 align-content-center shadow-sm" id="deleteMessage">
+                <h5><i class="fa fa-check"></i>&nbsp;&nbsp;@ViewBag.Message</h5>
+            </div>
+        }
+    }
+
+    <!-- Section: Blog v.1 -->
+    <section class="mb-5" id="blog">
+
+        <!-- Section heading -->
+        <h2 class="h1-responsive font-weight-bold text-center mb-5">Recent posts</h2>
+        <!-- Section description -->
+        <p class="text-center w-responsive mx-auto mb-5">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        @{
+            var temp = 0;
+        }
+
+        @foreach (var item in Model)
+        {
+            if (temp % 2 == 0)
+            {
+                <!-- Grid row -->
+                <div class="row">
+
+                    <!-- Grid column -->
+                    <div class="col-lg-5">
+
+                        <!-- Featured image -->
+                        <div class="view overlay rounded z-depth-2 mb-lg-0 mb-4">
+                            <img class="img-fluid" src="@item.MainImage" alt="Sample image">
+                            <a>
+                                <div class="mask rgba-white-slight"></div>
+                            </a>
+                        </div>
+
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-lg-7">
+
+                        <!-- Category -->
+                        <a href="#!" class="green-text"><h6 class="font-weight-bold mb-3"><i class="fa fa-cutlery pr-2"></i>Food</h6></a>
+                        <!-- Post title -->
+                        <h3 class="font-weight-bold mb-3"><strong>@item.Title</strong></h3>
+
+                        <!-- Excerpt -->
+                        <p>@item.Description</p>
+                        <!-- Post data -->
+                        <p>by <a><strong>@item.UserName</strong></a>, @item.Created</p>
+                        <!-- Read more button -->
+                        <a href="/Blog/DetailsAsync/@item.Id" class="btn btn-success btn-general btn-md">Read more</a>
+
+                    </div>
+                    <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+                <hr class="my-5">
+            }
+
+
+
+            if (temp % 2 != 0)
+            {
+                <!-- Grid row -->
+                <div class="row">
+
+                    <!-- Grid column -->
+                    <div class="col-lg-7">
+
+                        <!-- Category -->
+                        <a href="#!" class="pink-text"><h6 class="font-weight-bold mb-3"><i class="fa fa-image pr-2"></i>Lifestyle</h6></a>
+                        <!-- Post title -->
+                        <h3 class="font-weight-bold mb-3"><strong>@item.Title</strong></h3>
+                        <!-- Excerpt -->
+                        <p>@item.Description</p>
+                        <!-- Post data -->
+                        <p>by <a><strong>@item.UserName</strong></a>, @item.Created</p>
+                        <!-- Read more button -->
+                        <a href="/Blog/DetailsAsync/@item.Id" class="btn btn-pink btn-general btn-md mb-lg-0 mb-4">Read more</a>
+
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-lg-5">
+
+                        <!-- Featured image -->
+                        <div class="view overlay rounded z-depth-2">
+                            <img class="img-fluid" src="@item.MainImage" alt="Sample image">
+                            <a>
+                                <div class="mask rgba-white-slight"></div>
+                            </a>
+                        </div>
+
+                    </div>
+                    <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+                <hr class="my-5">
+            }
+
+            temp++;
+        }
+
+    </section>
+    <!-- Section: Blog v.1 -->
+</div>

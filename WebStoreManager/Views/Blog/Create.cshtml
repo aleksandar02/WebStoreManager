@@ -1,0 +1,159 @@
+﻿@model WebStoreManager.Models.BlogViewModel.BlogPostViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<script>
+
+    tinymce.init({
+        selector: "textarea#tinymice",
+        inline: false,
+        mode: "textareas",
+        plugins: "textcolor",
+        toolbar: "bold italic underline fontselect forecolor backcolor align",
+        force_p_newlines: true,
+
+        fontsize_formats: "8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt"
+
+
+    });
+</script>
+
+<br />
+<div class="container">
+
+    <!--Heading-->
+    <h1 class="text-center">Objavi blog</h1>
+    <hr />
+
+    <!--Create blog form-->
+    <form asp-action="CreateAsync" asp-controller="Blog" enctype="multipart/form-data" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!--Grid row-->
+        <div class="row">
+
+            <div class="col-md-1"></div>
+
+            <!--Grid column-->
+            <div class="col-md-5">
+
+                <div class="md-form">
+
+                    <label asp-for="Title">Naslov</label><br />
+                    <input asp-for="Title" class="form-control"/>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+
+                </div>
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--./Grid row-->
+
+        <!--Gird row-->
+        <div class="row">
+
+            <div class="col-md-1"></div>
+
+            <!--Grid column-->
+            <div class="col-md-5">
+
+                <div class="form-group">
+
+                    <label asp-for="CategoryId" class="control-label">Kategorija</label>
+                    <select asp-for="CategoryId" class="form-control">
+                        <option class="myOption" value="1">Promocije</option>
+                        <option class="myOption" value="2">Obaveštenja</option>
+                        <option class="myOption" value="3">Ostalo</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+
+                </div>
+
+            </div>
+            <!--./Grid column-->
+
+        </div>
+        <!--./Grid row-->
+
+        <!--Grid row-->        
+        <div class="row">
+
+            <div class="col-md-1"></div>
+
+            <!--Grid column-->
+            <div class="col-md-5">
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Opis</label><br />
+                    <textarea asp-for="Description" rows="5" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="MainImage" type="file" name="file" value=""/>
+                    <span asp-validation-for="MainImage" class="text-danger"></span>
+                </div>
+
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--./Grid row-->
+
+        <!--Grid row-->
+        <div class="row">
+            <div class="col-md-1"></div>
+
+            <!--Gird column-->
+            <div class="col-md-10">
+
+                <div class="form-group">
+                    <label for="Content">Sadržaj</label>
+                    <textarea asp-for="Content" rows="6" id="tinymice"></textarea>
+                </div>
+
+                <div class="form-group">
+
+                    <label>Promocija:&nbsp;
+                        @*<input asp-for="Promote" type="checkbox" /> @Html.DisplayNameFor(model => model.Promote)*@
+
+                        <label class="radio-inline">
+                            <input type="radio" name="Promote" value="true">Da
+                        </label>
+                        &nbsp;
+                        <label class="radio-inline">
+                            <input type="radio" name="Promote" value="false">Ne
+                        </label>
+
+                    </label>
+
+                </div>
+
+                <hr />
+
+                <button type="submit" class="btn btn-default pull-right">Objavi</button>
+
+            </div>
+            <!--./Grid column-->
+
+            <div class="col-md-1"></div>
+
+        </div>
+        <!--./Grid row-->
+
+    </form>
+    <!--./Create blog form-->
+</div>
+
+
+<br />
+
+
+@section Scripts
+    {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

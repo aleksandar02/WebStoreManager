@@ -1,0 +1,143 @@
+﻿@using WebStoreManager.ViewComponents
+@model WebStoreManager.Models.BlogViewModel.BlogPostViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<br /><br /><br />
+
+<!--Main layout-->
+<main id="blog-details">
+    <div class="container">
+
+        @{
+            if (ViewBag.Message == "Successfully deleted!")
+            {
+                <div class="deleteMessage light-green lighten-2 text-white p-3 align-content-center shadow-sm" id="deleteMessage">
+                    <h5><i class="fa fa-check"></i>&nbsp;&nbsp;@ViewBag.Message</h5>
+                </div>
+            }
+
+            if (ViewBag.Message == "Commented successfully!")
+            {
+                <div class="deleteMessage light-green lighten-2 text-white p-3 align-content-center shadow-sm" id="deleteMessage">
+                    <h5><i class="fa fa-comment-o"></i>&nbsp;&nbsp;@ViewBag.Message</h5>
+                </div>
+            }
+
+            if (ViewBag.Message == "Edited successfully!")
+            {
+                <div class="deleteMessage light-green lighten-2 text-white p-3 align-content-center shadow-sm" id="deleteMessage">
+                    <h5><i class="fa fa-comment-o"></i>&nbsp;&nbsp;@ViewBag.Message</h5>
+                </div>
+            }
+        }
+
+
+
+        <!--Heading-->
+        <div>
+
+            <h1 class="h1-responsive m-0 font-weight-normal">@Model.Title</h1>
+            <p class="green-text font-weight-bold m-1">Food</p>
+
+        </div>
+        <!--./Heading-->
+        <!--Grid row-->
+        <div class="row">
+
+            <!--Grid column-->
+            <div class="col-md-8 mb-4">
+
+                <!--Image-->
+                <div class="view overlay" style="cursor: none;">
+
+                    <img src="@Model.MainImage" class="img-fluid w-100" alt="placeholder">
+                    <div class="mask waves-effect rgba-white-slight"></div>
+
+                </div>
+                <!--./Image-->
+                <!--Grid row-->
+                <div class="row m-1">
+
+                    <!--Grid column-->
+                    <div class="col-sm-6 p-0">
+                        <p class="grey-text text-sm-left">by @Model.UserName</p>
+                    </div>
+                    <!--./Grid column-->
+                    <!--Grid column-->
+                    <div class="col-sm-6 p-0">
+                        <p class="grey-text text-sm-right">@Model.Created</p>
+                    </div>
+                    <!--./Grid column-->
+
+                </div>
+                <!--./Grid row-->
+
+                <hr class="mb-4">
+
+                <!--Description-->
+                @Html.Raw(Model.Content)
+
+                <br />
+
+                <!--Section: Comment section-->
+                <section>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+
+                        <!--Heading-->
+
+                        <form action="/Blog/CreateBlogCommentAsync" method="post">
+
+                            <input type="hidden" name="blogId" id="blogId" value="@Model.Id" />
+                            <div class="md-form">
+                                <textarea class="md-textarea form-control w-100" id="blogComment" name="blogComment" rows="3"></textarea>
+                                <label for="blogComment">Material textarea</label>
+                            </div>
+                            <button type="submit" id="commentBtn" class="btn btn-general btn-primary">Comment</button>
+
+                        </form>
+                    }
+                    @if (User.Identity.IsAuthenticated == false)
+                    {
+                        <!--Heading-->
+                        <h4 class="h3-responsive">If you want to leave a comment please log in!</h4>
+
+                        <form action="/Blog/CreateBlogCommentAsync" method="post">
+
+                            <input type="hidden" name="blogId" id="blogId" value="@Model.Id" />
+                            <div class="md-form">
+                                <textarea class="md-textarea form-control w-100" id="blogComment" name="blogComment" rows="3"></textarea>
+                                <label for="blogComment" id="blogLabel">Material textarea</label>
+                            </div>
+                            <button type="button" id="commentBtn" class="btn btn-general btn-primary">Comment</button>
+
+                        </form>
+
+                    }
+
+                    @await Component.InvokeAsync(nameof(GetAllBlogComments), new { id = Model.Id })
+
+                </section>
+                <!--./Section: Comment section-->
+
+            </div>
+            <!--./Grid column-->
+            <!--Grid column-->
+            <div class="col-md-4">
+
+                @await Component.InvokeAsync(nameof(RecomendedBlogs), new { id = Model.Id })
+
+            </div>
+            <!--./Grid column-->
+
+        </div>
+        <!--./Grid row-->
+
+    </div>
+</main>
+<!--./Main layout-->

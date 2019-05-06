@@ -1,0 +1,128 @@
+﻿@model IEnumerable<WebStoreManager.Models.BlogViewModel.BlogCommentViewModel>
+@using Microsoft.AspNetCore.Identity;
+
+@{
+    Layout = null;
+}
+<div class="container-fluid">
+
+    @if (Model.Count() > 0)
+    {
+        <h3 class="h2-responsive my-4">@Model.Count() comments</h3>
+    }
+
+    @if (Model.Count() == 0)
+    {
+        <h3 class="h3-responsive my-4">Be the first one to comment</h3>
+    }
+    @foreach (var item in Model)
+    {
+
+        <!--Grid row-->
+        <div class="row p-2">
+
+            <!--Gird column-->
+            <div class="col-md-12">
+                <div class="comment">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5 class="font-weight-normal text-primary my-3 h5-responsive">@item.UserName.Substring(0, item.UserName.IndexOf('@')) <span class="text-dark">commented</span>&nbsp;<span class="font-weight-light grey-text" style="font-size: 11pt;"> - &nbsp;&nbsp;@item.LastUpdate</span></h5>
+                            <h6 style="text-align: justify;" class="pl-2">@Html.Raw(item.Comment)</h6>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5 class="h5-responsive my-4 text-right">
+
+                                @if (User.Identity.Name == item.UserName)
+                                {
+                                    <a href="#" data-toggle="modal" data-target="#editPostComment" id="@item.Id" class="text-default font-weight-light" onclick="commentDetails(@item.Id, '@item.Comment')"><i class="fa fa-pen"></i></a>
+                                }
+                                &nbsp;&nbsp;&nbsp;
+                                @if (User.Identity.Name == item.UserName || User.IsInRole("SuperAdmin") == true)
+                                {
+
+                                    <!-- Button trigger modal -->
+                                    <a class="trash" data-toggle="modal" data-target="#deletePostComment" onclick="$('#commentId').val(@item.Id);">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                }
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <!--./Grid column-->
+
+        </div>
+        <!--./Grid row-->
+
+
+    }
+
+    <form asp-action="DeletePostComment" asp-controller="Blog" method="post">
+        <!-- Modal -->
+        <div class="modal fade" id="deletePostComment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        If you delete, there's no back!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-general btn-primary">Yes</button>
+                        <button type="button" class="btn btn-general btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="commentId" id="commentId" />
+    </form>
+
+    <form asp-action="EditPostComment" asp-controller="Blog" method="post">
+        <!-- Modal -->
+        <div class="modal fade" id="editPostComment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit post comment!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="md-form" style="margin: 0; padding: 0;">
+                            <label for="postComment">Comment</label>
+                            <textarea rows="3" class="md-textarea form-control w-100" id="postComment" name="postComment"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-general btn-primary">Save</button>
+                        <button type="button" class="btn btn-general btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="editCommentId" id="editCommentId" />
+    </form>
+</div>
+<script>
+    $("document").ready(function () {
+
+    });
+
+    function commentDetails(id, comment) {
+
+        $("textarea#postComment").text(comment);
+        $("#editCommentId").val(id);
+    }
+</script>

@@ -1,0 +1,260 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+<br /><br />
+
+<script src="~/lib/handlebars/handlebars.min.js"></script>
+<script src="~/lib/underscore/underscore-min.js"></script>
+
+<script type="text/javascript">
+
+    $("document").ready(function () {
+
+        let data = [];
+
+        var template = $('#handlebars-demo').html();
+        var templateScript = Handlebars.compile(template);
+        var dataContainer = $("#row");
+        var html = templateScript(data);
+
+        $.ajax({
+            url: '/Product/GetProducts',
+            type: 'GET',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            error: function (e) {
+                console.log("Error neuspeh");
+            },
+            success: function (response) {
+
+                data = response;
+
+                var filtered = _.sortBy(data, 'Price').reverse();
+                var htmlContent = generateProductView(filtered);
+
+                $("#row").html(htmlContent);
+            }
+        });
+
+        $("#searchFruitsAndVegetables").click(function () {
+
+            var dataContainer = $("#row");
+
+            var filtered = _.filter(data, { CategoryDescription: "Voće i povrće" });
+
+            var htmlContent = generateProductView(filtered);
+            dataContainer.empty();
+
+            dataContainer.append(htmlContent);
+        });
+
+        function generateProductView(data) {
+
+            return html = templateScript(data);
+        }
+
+        $('#filter').on('change', function () {
+
+            var filtered = [];
+
+            if (this.value != -1) {
+
+                filtered = _.filter(data, { CategoryId: parseInt(this.value) });
+            }
+            else {
+                filtered = data;
+            }
+
+            dataContainer.empty();
+
+            var filteredSorted = _.sortBy(filtered, 'Price').reverse();
+            var htmlContent = generateProductView(filteredSorted);
+
+            dataContainer.append(htmlContent);
+
+
+        });
+
+
+        $("#searchProductsForm").on("submit", function (e) {
+            e.preventDefault();
+            var text = $("#searchProducts").val();
+            console.log(text);
+
+            var filtered = [];
+
+            if (text != "") {
+                filtered = _.filter(data, { CategoryDescription: text });
+            }
+            else {
+                filtered = data;
+                $("#filter option[value='-1']").prop('selected', true);
+            }
+
+            dataContainer.empty();
+
+            var filteredSorted = _.sortBy(filtered, 'Price').reverse();
+            var htmlContent = generateProductView(filteredSorted);
+
+            dataContainer.append(htmlContent);
+
+
+        });
+    });
+
+    function fillModal(description, name, price, image, categoryDescription, barcode) {
+
+        $("#productName").html(name);
+        $("#productImage").attr('src', image);
+        $("#productCategoryDescription").html(categoryDescription);
+        $("#productDescription").html(description);
+        $("#productBarcode").html("Barcode:  " + barcode);
+        $("#productPrice").html("<span class='font-weight-light grey-text'></span>$" + price.toFixed(2));
+    }
+
+
+</script>
+
+@{
+    if (ViewBag.Message == "Successfully created!")
+    {
+        <div class="deleteMessage light-green lighten-2 text-white p-3 align-content-center shadow-sm" id="deleteMessage">
+            <h5><i class="fa fa-check"></i>&nbsp;&nbsp;@ViewBag.Message</h5>
+        </div>
+    }
+}
+
+<div id="products">
+    <div class="container-fluid pt-md-2">
+        <div class="row">
+            <div class="col-md-2 col-lg-1"></div>
+            <div class="col-xl-10 col-lg-12 col-md-12">
+                <div class="row" id="product-header">
+                    <div class="col-md-12 d-flex flex-lg-row flex-column justify-content-lg-between pt-lg-0 pt-3">
+                        <div class="product-type-text p-lg-3 p-md-0 p-sm-0 d-flex align-items-end">
+                            <h2 class="h2-responsive font-weight-bold" id="categoryHeading">Products</h2>
+                        </div>
+                        <div class="product-filters d-flex flex-lg-row flex-column align-items-xl-center">
+                            <div class="search-products px-lg-3 p-md-0 p-sm-3">
+                                <form method="post" id="searchProductsForm">
+                                    <div class="md-form">
+                                        <label for="#searchProducts" class="text-uppercase firstFilter grey-text font-weight-bold m-0" style="font-size: 14px;">Search</label>
+                                        <input type="text" name="searchProducts" id="searchProducts" class="form-control" />
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="filterProducts p-lg-3 p-md-0 p-sm-3">
+                                <label class="text-uppercase firstFilter grey-text font-weight-bold m-0" style="font-size: 14px;">Filter by</label><br />
+                                <select class="collection-sort__input font-weight-bold dark-grey-text" id="filter">
+                                    <option value="-1">Sve</option>
+                                    <option value="1">Mlečni proizvodi</option>
+                                    <option value="2">Voće i povrće</option>
+                                    <option value="3">Pekara</option>
+                                    <option value="4">Smrznuta hrana</option>
+                                    <option value="5">Piće</option>
+                                    <option value="6">Kozmetika</option>
+                                    <option value="7">Hemija</option>
+                                    <option value="8">Drugo</option>
+                                </select>
+                            </div>
+                            <div class="filterProducts p-lg-3 p-md-0 p-sm-3">
+                                <label for="#filter" class="text-uppercase grey-text font-weight-bold m-0" style="font-size: 14px;">Sort by</label><br />
+                                <select class="collection-sort__input font-weight-bold dark-grey-text" id="q">
+                                    <option value="-1">Sve</option>
+                                    <option value="1">Mlečni proizvodi</option>
+                                    <option value="2">Voće i povrće</option>
+                                    <option value="3">Pekara</option>
+                                    <option value="4">Smrznuta hrana</option>
+                                    <option value="5">Piće</option>
+                                    <option value="6">Kozmetika</option>
+                                    <option value="7">Hemija</option>
+                                    <option value="8">Drugo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="row">
+                    <script id="handlebars-demo" type="text/x-handlebars-template">
+
+                        {{#each this}}
+                        @*<div class="col-xl-3 col-lg-6 col-md-6 text-center p-2" id="content">
+                                <div class="imageContainer">
+                                    <div class="z-depth-1-half">
+                                        <img src="{{this.Image}}" class="img-fluid" alt="">
+                                        <div class="middle">
+                                            <a href="#" data-toggle="modal" id="quickView" data-target="#productDetailsModal" onclick="fillModal('{{this.Description}}', '{{this.Name}}', {{this.Price}}, '{{this.Image}}', '{{this.CategoryDescription}}', '{{this.Barcode}}')" class="btn btn-deep-orange">View</a>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="my-2 h5-responsive font-weight-bold">{{this.Name}}</h5>
+                                    <h5 class="p-1 h5-responsive green-text font-weight-bold">{{this.Price}}$</h5>
+                                </div>
+
+                            </div>*@
+
+                        <div class="col-xl-3 col-lg-4 col-md-6 text-center p-2" id="content">
+                            <div class="product">
+                                <!--Zoom effect-->
+                                <div class="view overlay zoom">
+                                    <img src="{{this.Image}}" class="img-fluid" alt="smaple image">
+                                    <div class="mask flex-center">
+                                    </div>
+                                    <div class="product-btn">
+                                        <a href="#" class="btn btn-product" data-toggle="modal" id="quickView" data-target="#productDetailsModal" onclick="fillModal('{{this.Description}}', '{{this.Name}}', {{this.Price}}, '{{this.Image}}', '{{this.CategoryDescription}}', '{{this.Barcode}}')">{{this.Name}}</a>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        {{/each}}
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title font-weight-bold h4-responsive" id="productName"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="view overlay z-depth-1-half mb-2">
+                    <img src="" id="productImage" class="img-fluid" alt="">
+                    <div class="mask rgba-white-slight"></div>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 " style="padding: 0;">
+                            <p class="m-1 font-weight-bold" id="productCategoryDescription"></p>
+                        </div>
+                        <div class="col-md-6 text-md-right" style="padding: 0;">
+                            <p class="m-1 grey-text" id="productBarcode"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="m-1 mb-2 text-justify grey-text" id="productDescription"></p>
+                <h2 class="m-1 green-text" id="productPrice"></h2>
+
+                <hr />
+
+                <button type="button" class="btn btn-general btn-secondary fa-pull-right mt-2" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+

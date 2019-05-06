@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebStoreManager</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/MDBootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/MDBootstrap/css/mdb.min.css" />
+        <link rel="stylesheet" href="~/lib/MDBootstrap/css/style.css" />
+        <link rel="stylesheet" href="~/lib/fontawesome/css/fontawesome.css" />
+        <link rel="stylesheet" href="~/lib/fontawesome/css/regular.css" />
+        <link rel="stylesheet" href="~/lib/fontawesome/css/solid.css" />
+        <link rel="stylesheet" href="~/lib/fontawesome/css/brands.css" />
+        <link rel="stylesheet" href="~/lib/fontawesome/css/v4-shims.min.css" />
+        <link href="~/lib/MDBootstrap/css/style.min.css" rel="stylesheet" />
+        <link href="~/lib/MDBootstrap/css/mdb.css" rel="stylesheet" />
+        <link href="~/css/site.css" rel="stylesheet" />
+    </environment>
+    @*<environment exclude="Development">
+            <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+                  asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+                  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+            <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        </environment>*@
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/tinymce/js/tinymce/jquery.tinymce.min.js"></script>
+        <script src="~/lib/tinymce/js/tinymce/tinymce.min.js"></script>
+        <script src="~/lib/MDBootstrap/js/bootstrap.min.js"></script>
+        <script src="~/lib/MDBootstrap/js/popper.min.js"></script>
+        <script src="~/lib/MDBootstrap/js/mdb.min.js"></script>
+        <script src="~/lib/fontawesome/js/fontawesome.js"></script>
+        <script src="~/lib/MDBootstrap/js/bootstrap.js"></script>
+        <script src="~/lib/MDBootstrap/js/modules/jquery.easing.js"></script>
+        <script src="~/lib/MDBootstrap/js/modules/forms-free.js"></script>
+        <script src="~/lib/MDBootstrap/js/modules/velocity.min.js"></script>
+        <script src="~/lib/MDBootstrap/js/modules/scrolling-navbar.js"></script>
+
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        @*<script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                    crossorigin="anonymous"
+                    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+            </script>*@
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="65">
+
+
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark indigo fixed-top" id="#navbar">
+        <div class="container my-0">
+
+            <!-- Navbar brand -->
+            <a class="navbar-brand" href="#">WebStoreManager</a>
+
+            <!-- Collapse button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav" aria-controls="basicExampleNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Collapsible content -->
+            <div class="collapse navbar-collapse" id="basicExampleNav">
+
+                <!-- Links -->
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home/Index">
+                            Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Product/Index">Products</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Blog/Index">Blog</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+
+                </ul>
+                <!-- Links -->
+
+                <ul class="navbar-nav">
+                    @await Html.PartialAsync("_LoginPartial")
+                </ul>
+
+            </div>
+            <!-- Collapsible content -->
+        </div>
+    </nav>
+    <!--/.Navbar-->
+
+    <script>
+        $(document).ready(function () {
+            var url = window.location;
+            $('.navbar .navbar-nav').find('.active').removeClass('active');
+            $('.navbar .navbar-nav li a').each(function () {
+                if (this.href == url) {
+                    $(this).parent().addClass('active');
+                }
+
+            });
+
+        });
+    </script>
+
+    @RenderBody()
+    <!-- Footer -->
+    <footer class="page-footer font-small unique-color-dark pt-4 mt-4" id="footer">
+
+        <!-- Footer Links -->
+        <div class="container text-center text-md-left">
+
+            <!-- Grid row -->
+            <div class="row">
+
+                <!-- Grid column -->
+                <div class="col-md-4 mx-auto">
+
+                    <!-- Content -->
+                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Footer Content</h5>
+                    <p>Here you can use rows and columns here to organize your footer content. Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+
+                </div>
+                <!-- Grid column -->
+
+                <hr class="clearfix w-100 d-md-none">
+
+                <!-- Grid column -->
+                <div class="col-md-2 mx-auto">
+
+                    <!-- Links -->
+                    <h5 class="font-weight-bold text-uppercase mt-3">Links</h5>
+
+                    <hr class="pink accent-4 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+
+                    <ul class="list-unstyled">
+
+                        <li>
+                            <a href="#!">Link 1</a>
+                        </li>
+
+                        <li>
+                            <a href="#!">Link 2</a>
+                        </li>
+
+                        <li>
+                            <a href="#!">Link 3</a>
+                        </li>
+
+                        <li>
+                            <a href="#!">Link 4</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+                <!-- Grid column -->
+
+                <hr class="clearfix w-100 d-md-none">
+
+                <!-- Grid column -->
+                <div class="col-md-2 mx-auto">
+
+                    <!-- Links -->
+                    <h5 class="font-weight-bold text-uppercase mt-3">Links</h5>
+
+                    <hr class="pink accent-4 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="#!">Link 1</a>
+                        </li>
+                        <li>
+                            <a href="#!">Link 2</a>
+                        </li>
+                        <li>
+                            <a href="#!">Link 3</a>
+                        </li>
+                        <li>
+                            <a href="#!">Link 4</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- Grid column -->
+
+                <hr class="clearfix w-100 d-md-none">
+
+                <!-- Grid column -->
+                <div class="col-md-2 mx-auto">
+
+                    <!-- Links -->
+                    <h5 class="font-weight-bold text-uppercase mt-3">Links</h5>
+
+                    <hr class="pink accent-4 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="#!">Link 1</a>
+                        </li>
+                        <li>
+                            <a href="#!">Link 2</a>
+                        </li>
+                        <li>
+                            <a href="#!">Link 3</a>
+                        </li>
+                        <li>
+                            <a href="#!">Link 4</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- Grid column -->
+
+            </div>
+            <!-- Grid row -->
+
+        </div>
+        <!-- Footer Links -->
+
+        <hr>
+
+        <!-- Call to action -->
+        <ul class="list-unstyled list-inline text-center py-2">
+            <li class="list-inline-item">
+                <h5 class="mb-1">Get free cupon</h5>
+            </li>
+            <li class="list-inline-item">
+                <a href="#" class="btn btn-general btn-unique">Sign up!</a>
+            </li>
+        </ul>
+        <!-- Call to action -->
+
+        <hr>
+
+        <!-- Social buttons -->
+        <ul class="list-unstyled list-inline text-center">
+            <li class="list-inline-item">
+                <a class="btn-floating btn-lg btn-fb ">
+                    <i class="fab fa-facebook-square"> </i>
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a class="btn-floating btn-lg btn-tw">
+                    <i class="fab fa-twitter-square"> </i>
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a class="btn-floating btn-lg btn-gplus">
+                    <i class="fab fa-google-plus-square"> </i>
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a class="btn-floating btn-lg btn-li">
+                    <i class="fab fa-linkedin"> </i>
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a class="btn-floating btn-lg btn-dribbble">
+                    <i class="fab fa-dribbble-square"> </i>
+                </a>
+            </li>
+        </ul>
+        <!-- Social buttons -->
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">
+            © 2018 Copyright:
+            <a href="https://mdbootstrap.com/bootstrap-tutorial/"> Aleksandar Milic</a>
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
+
+
+</body>
+</html>

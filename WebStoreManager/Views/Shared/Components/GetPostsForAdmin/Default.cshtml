@@ -1,0 +1,223 @@
+﻿@model IEnumerable<WebStoreManager.Models.BlogViewModel.BlogPostViewModel>
+
+@{
+    Layout = null;
+}
+
+<script src="~/lib/handlebars/handlebars.min.js"></script>
+<script src="~/lib/underscore/underscore-min.js"></script>
+
+<script src="~/lib/tinymce/js/tinymce/jquery.tinymce.min.js"></script>
+<script src="~/lib/tinymce/js/tinymce/tinymce.min.js"></script>
+
+
+<script>
+    $("#document").ready(function () {
+        let data = [];
+
+        var template = $('#posts').html();
+        var templateScript = Handlebars.compile(template);
+        var dataContainer = $("#dataContainer");
+        var html = templateScript(data);
+
+        //Get posts
+        $.ajax({
+            url: '/Blog/GetAllPosts',
+            type: 'GET',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            error: function (e) {
+                console.log("Error neuspeh");
+            },
+            success: function (response) {
+
+                data = response;
+
+                var htmlContent = generateProductView(data);
+
+                $("#dataContainer").html(htmlContent);
+            }
+        });
+
+
+        function generateProductView(data) {
+            return html = templateScript(data);
+        }
+
+
+    });
+
+    function fillEditModal(data) {
+
+        var row = data.closest('tr');
+
+    }
+</script>
+
+
+<style>
+    table thead tr th {
+        font-size: 13pt !important;
+    }
+
+    table tbody tr th,
+    table tbody tr td {
+        font-size: 12pt !important;
+    }
+</style>
+
+<script>
+
+    tinymce.init({
+        selector: "textarea#editContent",
+        inline: false,
+        mode: "textareas",
+        plugins: "textcolor",
+        toolbar: "bold italic underline fontselect forecolor backcolor align",
+        force_p_newlines: true,
+
+        fontsize_formats: "8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt"
+
+
+    });
+</script>
+
+<div class="container">
+    <!--Table-->
+    <table class="table">
+
+        <!--Table head-->
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>UserName</th>
+                <th>Category</th>
+                <th>Created</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <!--Table head-->
+        <!--Table body-->
+        <tbody id="dataContainer">
+            <script id="posts" type="text/x-handlebars-template">
+
+                {{#each this}}
+                <tr>
+
+                    <th scope="row"></th>
+                    <td>{{this.title}}</td>
+                    <td>{{this.userName}}</td>
+                    <td>{{this.categoryDescription}}</td>
+                    <td>{{this.created}}</td>
+                    <td><a href="#" data-toggle="modal" data-target="#editBlogModal" class="text-primary font-weight-bold" @*onclick="fillEditModal(this)"*@ onclick="$('#editPostId').val({{this.id}})">Edit</a></td>
+                    <td><a href="#" onclick="$('#deletePostId').val({{this.id}})" data-toggle="modal" data-target="#deleteBlogModal" class="text-danger font-weight-bold">Delete</a></td>
+                </tr>
+                {{/each}}
+
+            </script>
+
+        </tbody>
+        <!--Table body-->
+
+    </table>
+    <!--Table-->
+</div>
+
+<!-- Modal -->
+<form asp-action="EditAsync" asp-controller="Blog" enctype="multipart/form-data" method="post">
+
+    <div class="modal lg fade" id="editBlogModal" tabindex="-1" role="dialog" aria-labelledby="editBlogModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editBlogModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label for="editTitle">Naslov</label><br />
+                        <input name="editTitle" id="editTitle" class="form-control" />
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="editCategoryId" id="editCategoryId" class="control-label">Kategorija</label>
+                        <select name="editCategoryId" class="form-control">
+                            <option class="myOption" value="1">Promocije</option>
+                            <option class="myOption" value="2">Ovaveštenja</option>
+                            <option class="myOption" value="3">Ostalo</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editDescription" class="control-label">Opis</label><br />
+                        <textarea name="editDescription" id="editDescription" rows="5" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <input for="editMainImage" type="file" name="file" value="" />
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Content">Sadržaj</label>
+                        <textarea name="editContent" rows="6" id="editContent"></textarea>
+                    </div>
+
+                    <label>
+                        Promocija:&nbsp;
+
+                        <label class="radio-inline">
+                            <input type="radio" name="editPromote" id="editPromote1" value="true">Da
+                        </label>
+                        &nbsp;
+                        <label class="radio-inline">
+                            <input type="radio" name="editPromote" id="editPromote2" value="false">Ne
+                        </label>
+
+                    </label>
+
+                    <input type="hidden" name="editPostId" id="editPostId" value="" />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- Modal -->
+<form asp-action="Delete" asp-controller="Blog" method="post">
+    <div class="modal fade" id="deleteBlogModal" tabindex="-1" role="dialog" aria-labelledby="deleteBlogModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteBlogModalLabel">Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+                <input type="hidden" id="deletePostId" name="deletePostId" value="" />
+            </div>
+        </div>
+    </div>
+</form>

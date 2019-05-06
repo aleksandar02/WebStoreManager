@@ -1,0 +1,26 @@
+﻿@model IEnumerable<WebStoreManager.Models.BlogViewModel.BlogPostViewModel>
+
+@{
+    Layout = null;
+}
+
+<h1 class="h1-responsive">Recomended</h1>
+
+<hr class="my-3">
+@foreach (var item in Model)
+{
+    <div class="recomended-blog">
+        <div class="view overlay z-depth-1-half">
+            <img src="@item.MainImage" class="img-fluid" alt="">
+            <div class="mask rgba-white-slight"></div>
+        </div>
+        <div class="recomended-blog-content">
+            <h4 class="my-2 font-weight-bold">@item.Title</h4>
+            <p class="grey-text">@item.Description</p>
+            <a href="/Blog/DetailsAsync/@item.Id" class="details-link">Read more >></a>
+        </div>
+    </div>
+
+    <hr class="my-3">
+
+}

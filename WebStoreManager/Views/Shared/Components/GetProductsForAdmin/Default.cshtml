@@ -1,0 +1,176 @@
+﻿@model IEnumerable<WebStoreManager.Models.ProductViewModels.ProductViewModel>
+
+@{
+    Layout = null;
+}
+
+<script>
+
+    $("#document").ready(function () {
+        let data = [];
+
+        var template = $('#products').html();
+        var templateScript = Handlebars.compile(template);
+        var dataContainer = $("#dataContainer1");
+        var html = templateScript(data);
+
+        $.ajax({
+            url: '/Product/GetAllProducts',
+            type: 'GET',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            error: function (e) {
+                console.log("Error neuspeh");
+            },
+            success: function (response) {
+                data = response;
+
+                var htmlContent = generateProductView(data);
+
+                $("#dataContainer1").html(htmlContent);
+            }
+        });
+
+        function generateProductView(data) {
+            return html = templateScript(data);
+        }
+
+    });
+
+</script>
+
+<div class="container">
+    <!--Table-->
+    <table class="table">
+
+        <!--Table head-->
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Barcode</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>UserName</th>
+                <th>Created</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <!--Table head-->
+        <!--Table body-->
+        <tbody id="dataContainer1">
+            <script id="products" type="text/x-handlebars-template">
+
+                {{#each this}}
+                <tr>
+
+                    <th scope="row"></th>
+                    <td>{{this.name}}</td>
+                    <td>{{this.barcode}}</td>
+                    <td>{{this.price}}$</td>
+                    <td>{{this.categoryDescription}}</td>
+                    <td>{{this.userName}}</td>
+                    <td>{{this.created}}</td>
+                    <td><a href="#" data-toggle="modal" data-target="#editProductModal" class="text-primary font-weight-bold" @*onclick="fillEditModal(this)"*@ onclick="$('#editProductId').val({{this.id}}) ">Edit</a></td>
+                    <td><a href="#" onclick="$('#deleteProductId').val({{this.id}})" data-toggle="modal" data-target="#deleteProductModal" class="text-danger font-weight-bold">Delete</a></td>
+                </tr>
+                {{/each}}
+
+            </script>
+            
+        </tbody>
+        <!--Table body-->
+
+    </table>
+    <!--Table-->
+</div>
+
+<!-- Modal -->
+<form asp-action="EditAsync" asp-controller="Product" enctype="multipart/form-data" method="post">
+
+    <div class="modal lg fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="editName" class="control-label">Title</label><br />
+                        <input id="editName" name="editName" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editDescription" class="control-label">Description</label>
+                        <textarea id="editDescription" name="editDescription" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCategoryId" class="control-label">Category</label>
+                        <select id="editCategoryId" name="editCategoryId" class="form-control">
+                            <option value="1">Mlečni proizvodi</option>
+                            <option value="2">Voće i povrće</option>
+                            <option value="3">Pekara</option>
+                            <option value="4">Smrznuta hrana</option>
+                            <option value="5">Piće</option>
+                            <option value="6">Kozmetika</option>
+                            <option value="7">Hemija</option>
+                            <option value="8">Drugo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editPrice" class="control-label">Price</label><br />
+                        <input id="editPrice" name="editPrice" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editBarcode" class="control-label">Barcode</label><br />
+                        <input id="editBarcode" name="editBarcode" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editImage" class="control-label"></label><br />
+                        <input type="file" name="editImage" id="editImage" />
+                    </div>
+
+                    <input type="hidden" name="editProductId" id="editProductId" value="" />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- Modal -->
+<form asp-action="Delete" asp-controller="Product" method="post">
+    <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteProductModalLabel">Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+                <input type="hidden" id="deleteProductId" name="deleteProductId" value="" />
+            </div>
+        </div>
+    </div>
+</form>

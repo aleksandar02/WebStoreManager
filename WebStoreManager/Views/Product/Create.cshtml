@@ -1,0 +1,69 @@
+﻿@model WebStoreManager.Models.ProductViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+<br />
+<div class="container">
+
+    <h1 class="text-center h1-responsive">Create product</h1>
+    <hr class="my-3">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <form asp-action="CreateAsync" asp-controller="Product" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="md-form @*form-group*@">
+                    <label asp-for="Name" class="control-label"></label><br />
+                    <input asp-for="Name" name="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="md-form @*form-group*@">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" name="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="md-form @*form-group*@">
+                    <label asp-for="CategoryId" class="control-label">Category</label>
+                    <select asp-for="CategoryId" name="CategoryId" class="form-control">
+                        <option value="1">Mlečni proizvodi</option>
+                        <option value="2">Voće i povrće</option>
+                        <option value="3">Pekara</option>
+                        <option value="4">Smrznuta hrana</option>
+                        <option value="5">Piće</option>
+                        <option value="6">Kozmetika</option>
+                        <option value="7">Hemija</option>
+                        <option value="8">Drugo</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+
+                <div class="md-form form-group">
+                    <label asp-for="Price" class="control-label"></label><br />
+                    <input asp-for="Price" name="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="md-form form-group">
+                    <label asp-for="Barcode" class="control-label"></label><br />
+                    <input asp-for="Barcode" name="Barcode" class="form-control" />
+                    <span asp-validation-for="Barcode" class="text-danger"></span>
+                </div>
+
+                <div class="md-form @*form-group*@">
+                    <label asp-for="Image" class="control-label"></label><br />
+                    <input type="file" name="Image" asp-for="Image" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+
+                <br />
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
